@@ -39,20 +39,15 @@ public class ListaAudioFragment extends Fragment {
                 new MediaBrowserCompat.ConnectionCallback() {
                     @Override
                     public void onConnected() {
-
-                        MediaSessionCompat.Token token = mediaBrowser.getSessionToken();
-
-                        MediaControllerCompat mediaController = null;
                         try {
-                            mediaController = new MediaControllerCompat(requireActivity(), token);
+                            MediaSessionCompat.Token token = mediaBrowser.getSessionToken();
+                            MediaControllerCompat mediaController = new MediaControllerCompat(requireActivity(), token);
+                            MediaControllerCompat.setMediaController(requireActivity(), mediaController);
+
+                            loadSongs();
                         } catch (RemoteException e) {
                             e.printStackTrace();
                         }
-
-                        MediaControllerCompat.setMediaController(requireActivity(), mediaController);
-
-                        // Finish building the UI
-                        loadSongs();
                     }
 
                     @Override

@@ -2,6 +2,8 @@ package com.company.audioapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.navigation.Navigation;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -16,9 +18,16 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ActivityCompat.requestPermissions(this,
-                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                    MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+        } else {
+            enter();
+        }
     }
 
     @Override
@@ -26,14 +35,16 @@ public class MainActivity extends AppCompatActivity {
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // Se ha concedido permiso para leer el external storage
-                    // navegar a la lista de canciones
+                    enter();
                 } else {
-                    // Se ha denegado permiso para leer el external storage
-                    // cerrar la app
+                    finish();
                 }
                 return;
             }
         }
+    }
+
+    void enter(){
+        Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.listaAudioFragment);
     }
 }

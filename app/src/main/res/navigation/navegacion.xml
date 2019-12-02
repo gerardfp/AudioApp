@@ -3,11 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navegacion"
-    app:startDestination="@id/listaAudioFragment">
+    app:startDestination="@id/blankFragment">
 
     <fragment
         android:id="@+id/listaAudioFragment"
         android:name="com.company.audioapp.ListaAudioFragment"
         android:label="fragment_lista_audio"
         tools:layout="@layout/fragment_lista_audio" />
+    <fragment
+        android:id="@+id/blankFragment"
+        android:name="com.company.audioapp.BlankFragment"
+        android:label="fragment_blank"
+        tools:layout="@layout/fragment_blank" />
 </navigation>

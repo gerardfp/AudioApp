@@ -18,28 +18,20 @@ import androidx.media.MediaBrowserServiceCompat;
 
 public class MyMediaBrowserService extends MediaBrowserServiceCompat {
     private static final String MY_MEDIA_ROOT_ID = "media_root_id";
-    private static final String MY_EMPTY_MEDIA_ROOT_ID = "empty_root_id";
 
     private MediaSessionCompat mediaSession;
-    private PlaybackStateCompat.Builder stateBuilder;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
         mediaSession = new MediaSessionCompat(this, "ABCD");
-
-        mediaSession.setFlags(
-                MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS |
-                        MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
-
-        stateBuilder = new PlaybackStateCompat.Builder()
-                .setActions(PlaybackStateCompat.ACTION_PLAY | PlaybackStateCompat.ACTION_PLAY_PAUSE);
-
-        mediaSession.setPlaybackState(stateBuilder.build());
-
+        mediaSession.setFlags(MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS | MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
+        PlaybackStateCompat playbackStateCompat = new PlaybackStateCompat.Builder()
+                .setActions(PlaybackStateCompat.ACTION_PLAY | PlaybackStateCompat.ACTION_PLAY_PAUSE)
+                .build();
+        mediaSession.setPlaybackState(playbackStateCompat);
         mediaSession.setCallback(new MySessionCallback());
-
         setSessionToken(mediaSession.getSessionToken());
     }
 
@@ -66,7 +58,6 @@ public class MyMediaBrowserService extends MediaBrowserServiceCompat {
                 null,
                 ""
         )) {
-            // Cache column indices.
             int idColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID);
             int nameColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DISPLAY_NAME);
             int durationColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION);
@@ -84,6 +75,7 @@ public class MyMediaBrowserService extends MediaBrowserServiceCompat {
                 MediaDescriptionCompat mediaDescriptionCompat = new MediaDescriptionCompat.Builder()
                         .setTitle(name)
                         .setMediaId(String.valueOf(id))
+                        .setMediaUri(contentUri)
                         .build();
 
                 mediaItems.add(new MediaBrowserCompat.MediaItem(mediaDescriptionCompat,0));
